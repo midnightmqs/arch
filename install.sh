@@ -168,7 +168,7 @@ sleep 2
 # START THE INSTALLATION                      #
 ############################################### 
 echo "Running pacstrap..."
-pacstrap /mnt base linux linux-firmware linux-headers vim "${ucode}-ucode" $([ "$use_btrfs" = true ] && echo btrfs-progs) --quiet
+pacstrap /mnt base linux linux-firmware linux-headers vim "${ucode}-ucode" $([ "$use_btrfs" = true ] && echo btrfs-progs) > /dev/null
 echo "Running pacstrap DONE"
 
 echo "Generating fstab..."
