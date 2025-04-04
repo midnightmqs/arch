@@ -21,7 +21,7 @@ username=midnight
 user_password=password
 root_password=password
 
-disk=nvme0n1
+disk=/dev/nvme0n1
 use_btrfs=true
 use_encryption=true
 encryption_password=password
@@ -86,14 +86,15 @@ cat <<EOGDISK | gdisk $disk
 o
 Y
 n
-
+1
 
 +1G
 ef00
 n
+2
 
 
-
+8300
 w
 Y
 EOGDISK
