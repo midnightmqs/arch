@@ -60,7 +60,7 @@ sleep 5
 echo "Setting up the user..."
 
 echo -e "\tRunning pacman..."
-pacman -S base-devel go sed git xdg-utils xdg-user-dirs sudo --no-confirm --quiet
+pacman -S base-devel go sed git xdg-utils xdg-user-dirs sudo --noconfirm
 
 echo -e "\tCreating user... (${username})"
 useradd -m -g users -G wheel $username
@@ -83,11 +83,11 @@ xdg-user-dirs-update
 mkdir apps
 cd apps
 
-git clone https://aur.archlinux.org/yay.git
+git clone https://aur.archlinux.org/yay.git
 
 cd yay
 
-echo "$user_password" | makepkg -si --noconfirm --quiet
+echo "$user_password" | makepkg -si --noconfirm
 
 exit
 EOSU
@@ -102,7 +102,7 @@ sleep 5
 echo "Installing GRUB..."
 
 echo -e "\tRunning pacman..."
-pacman -S grub efibootmgr dosfstools mtools $([ "$use_btrfs" = true ] && echo grub-btrfs) --no-confirm --quiet
+pacman -S grub efibootmgr dosfstools mtools $([ "$use_btrfs" = true ] && echo grub-btrfs) --noconfirm
 
 echo -e "\tRunning GRUB install..."
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id="$bootloader_id" 
@@ -152,7 +152,7 @@ sleep 5
 if [ "$configure_battery" = true ]; then
     echo "Configuring battery..."
 
-    pacman -S tlp --no-confirm --quiet
+    pacman -S tlp --noconfirm
 
     echo "START_CHARGE_THRESH_BAT1=85" >> /etc/tlp.conf
     echo "STOP_CHARGE_THRESH_BAT1=90" >> /etc/tlp.conf
@@ -170,7 +170,7 @@ fi
 echo "Setting up networking..."
 
 echo -e "\tRunning pacman..."
-pacman -S networkmanager dialog bluez bluez-utils openssh iptables-nft firewalld iwd --no-confirm --quiet
+pacman -S networkmanager dialog bluez bluez-utils openssh iptables-nft firewalld iwd --noconfirm
 
 echo -e "\tConfiguring NetworkManager with iwd as the wifi backend..."
 echo "[device]" >> /etc/NetworkManager/conf.d/wifi_backend.conf
@@ -196,7 +196,7 @@ sleep 5
 ############################################### 
 echo "Installing basic utilities..."
 
-pacman -S curl wget zip unzip tmux tar less diff grep screen pacseek htop fastfetch imagemagick jq man-db man-pages plocate rsync --no-confirm --quiet
+pacman -S curl wget zip unzip tmux tar less diff grep screen pacseek htop fastfetch imagemagick jq man-db man-pages plocate rsync --noconfirm
 
 echo "Installing basic utilities DONE"
 sleep 5
@@ -208,8 +208,8 @@ sleep 5
 if [ "$install_display" = true ]; then
     echo "Setting up display and audio..."
 
-    pacman -S xorg xorg-server $display_drivers --no-confirm --quiet
-    pacman -S alsa-utils pipewire wireplumber pipewire-alsa pipewire-pulse pipewire-jack pavucontrol --no-confirm --quiet
+    pacman -S xorg xorg-server $display_drivers --noconfirm
+    pacman -S alsa-utils pipewire wireplumber pipewire-alsa pipewire-pulse pipewire-jack pavucontrol --noconfirm
 
     echo "Setting up display and audio DONE"
     sleep 5
