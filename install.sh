@@ -1,4 +1,4 @@
-source config.sh
+source ./config.sh
 
 ###############################################
 # UEFI CHECK                                  #
@@ -144,7 +144,8 @@ clear
 echo "Entering arch-chroot..."
 sleep 5
 
-cp chroot.sh /mnt/root/chroot.sh 
+cp ./config.sh /mnt/root/config.sh 
+cp ./chroot.sh /mnt/root/chroot.sh 
 chmod +x /mnt/root/chroot.sh
 
 arch-chroot /mnt /bin/bash /root/chroot.sh
