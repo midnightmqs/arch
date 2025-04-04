@@ -104,16 +104,11 @@ mkfs.fat -F32 $(get_partition 1)
 
 if [ "$use_encryption" = true ]; then
     echo -e "\tEnabling encryption..."
+    echo -n "$encryption_password" | cryptsetup luksFormat --type luks2 $(get_partition 2)
 
-    cat <<EOCRYPT | cryptsetup luksFormat $(get_partition 2)
-YES
-$encryption_password
-$encryption_password
-EOCRYPT
+    echo -e "\tOpening cryptroot... ($cryptroot)"
+    echo -n "$encryption_password" | cryptsetup luksOpen $(get_partition 2) $cryptroot
 
-    echo -e "\tOpening cryptroot... (${cryptroot})"
-
-    echo "$encryption_password" | cryptsetup luksOpen $(get_partition 2) "$cryptroot"
     root_partition="/dev/mapper/$cryptroot"
 else
     echo -e "\tEncryption disabled."
