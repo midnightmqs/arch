@@ -25,3 +25,16 @@ install_display=true
 display_drivers="mesa vulkan-intel intel-media-driver"
 
 configure_battery=true
+
+
+###############################################
+# UTILITY FUNCTIONS                           #
+############################################### 
+get_partition() {
+    local part_num=$1
+    if [[ $disk =~ [0-9]$ ]]; then
+        echo "${disk}p${part_num}"
+    else
+        echo "${disk}${part_num}"
+    fi
+}

@@ -1,4 +1,4 @@
-source ./config.sh
+source /root/arch/config.sh
 
 ###############################################
 # UEFI CHECK                                  #
@@ -11,19 +11,6 @@ else
 fi
 
 sleep 5
-
-
-###############################################
-# UTILITY FUNCTIONS                           #
-############################################### 
-get_partition() {
-    local part_num=$1
-    if [[ $disk =~ [0-9]$ ]]; then
-        echo "${disk}p${part_num}"
-    else
-        echo "${disk}${part_num}"
-    fi
-}
 
 
 ###############################################
@@ -144,8 +131,8 @@ clear
 echo "Entering arch-chroot..."
 sleep 5
 
-cp ./config.sh /mnt/root/config.sh 
-cp ./chroot.sh /mnt/root/chroot.sh 
+cp /root/arch/config.sh /mnt/root/config.sh 
+cp /root/arch/chroot.sh /mnt/root/chroot.sh 
 chmod +x /mnt/root/chroot.sh
 
 arch-chroot /mnt /bin/bash /root/chroot.sh

@@ -1,4 +1,4 @@
-source ./config.sh
+source /root/config.sh
 
 ###############################################
 # SETUP TIME                                  #
