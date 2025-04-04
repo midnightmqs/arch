@@ -1,3 +1,18 @@
+# loadkeys us
+# setfont ter-132
+#
+#
+# iwctl --passphrase [passphrase] station [name] connect [SSID]
+#
+#
+# iwctl
+# device list
+# device [name] set-property Powered on
+# station [name] scan
+# station [name] get-networks
+# station [name] connect [SSID]
+
+
 ###############################################
 # INSTALL CONFIG                              #
 ############################################### 
@@ -69,6 +84,7 @@ echo "Setting up ${disk}..."
 
 cat <<EOGDISK | gdisk $disk
 o
+Y
 n
 
 
@@ -79,6 +95,7 @@ n
 
 
 w
+Y
 EOGDISK
 
 echo -e "\tFormatting ESP..."
