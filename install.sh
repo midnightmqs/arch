@@ -131,8 +131,7 @@ clear
 echo "Entering arch-chroot..."
 sleep 5
 
-cp /root/arch/config.sh /mnt/root/config.sh 
-cp /root/arch/chroot.sh /mnt/root/chroot.sh 
-chmod +x /mnt/root/chroot.sh
+cp -R /root/arch /mnt/root/
+chmod +x /mnt/root/arch/chroot.sh
 
-arch-chroot /mnt /bin/bash /root/chroot.sh
+arch-chroot /mnt /bin/bash /root/arch/chroot.sh
