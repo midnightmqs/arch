@@ -100,12 +100,12 @@ Y
 EOGDISK
 
 echo -e "\tFormatting ESP..."
-mkfs.fat -F32 /dev/$(get_partition 1)
+mkfs.fat -F32 $(get_partition 1)
 
 if [ "$use_encryption" = true ]; then
     echo -e "\tEnabling encryption..."
 
-    cat <<EOCRYPT | cryptsetup luksFormat /dev/$(get_partition 2)
+    cat <<EOCRYPT | cryptsetup luksFormat $(get_partition 2)
 YES
 $encryption_password
 $encryption_password
@@ -113,11 +113,11 @@ EOCRYPT
 
     echo -e "\tOpening cryptroot... (${cryptroot})"
 
-    echo "$encryption_password" | cryptsetup luksOpen /dev/$(get_partition 2) "$cryptroot"
+    echo "$encryption_password" | cryptsetup luksOpen $(get_partition 2) "$cryptroot"
     root_partition="/dev/mapper/$cryptroot"
 else
     echo -e "\tEncryption disabled."
-    root_partition="/dev/$(get_partition 2)"
+    root_partition="$(get_partition 2)"
 fi
 
 if [ "$use_btrfs" = true ]; then
@@ -158,7 +158,7 @@ fi
 
 echo "Mounting ESP..."
 mkdir /mnt/boot
-mount /dev/$(get_partition 1) /mnt/boot
+mount $(get_partition 1) /mnt/boot
 
 echo "Setting up ${disk} DONE"
 
@@ -299,7 +299,7 @@ echo "Setting up initial RAM disk DONE"
 ###############################################
 echo "Reconfiguring GRUB..."
 if [ "$use_encryption" = true ]; then
-    cryptdevice_uuid=$(blkid -s UUID -o value /dev/$(get_partition 2))
+    cryptdevice_uuid=$(blkid -s UUID -o value $(get_partition 2))
     sed -i "s|^GRUB_CMDLINE_LINUX=.*|GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$cryptdevice_uuid:$cryptroot root=/dev/mapper/$cryptroot\"|" /etc/default/grub
 fi
 
