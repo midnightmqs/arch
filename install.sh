@@ -52,7 +52,7 @@ else
     echo "UEFI detected. Continuing..."
 fi
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -78,7 +78,7 @@ hwclock --systohc
 
 echo "Setting system time DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -161,21 +161,21 @@ mount $(get_partition 1) /mnt/boot
 
 echo "Setting up ${disk} DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
 # START THE INSTALLATION                      #
 ############################################### 
 echo "Running pacstrap..."
-pacstrap /mnt base linux linux-firmware linux-headers vim "${ucode}-ucode" $([ "$use_btrfs" = true ] && echo btrfs-progs) > /dev/null
+pacstrap /mnt base linux linux-firmware linux-headers vim "${ucode}-ucode" $([ "$use_btrfs" = true ] && echo btrfs-progs)
 echo "Running pacstrap DONE"
 
 echo "Generating fstab..."
-genfstab -U /mnt >> /mnt/etc/fstab
+genfstab -U /mnt >> /mnt/etc/fstab > /dev/null
 echo "Generating fstab DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -191,7 +191,7 @@ hwclock --systohc
 timedatectl set-ntp true
 echo "Setting system time DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -205,7 +205,7 @@ echo "LANG=$language" > /etc/locale.conf
 echo "KEYMAP=$keymap" > /etc/vconsole.conf
 echo "Setting language and locales DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -219,7 +219,7 @@ echo "::1 localhost" >> /etc/hosts
 echo "127.0.1.1 ${hostname}.localdomain $hostname" >> /etc/hosts
 echo "Setting hostname and hosts file DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -229,7 +229,7 @@ echo "Configuring pacman..."
 sed -i '/ParallelDownloads = 5/s/^#//g' /etc/pacman.conf
 echo "Configuring pacman DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -272,7 +272,7 @@ EOSU
 
 echo "Setting up the user DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -291,7 +291,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 echo "Installing GRUB DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -308,7 +308,7 @@ mkinitcpio -p linux
 
 echo "Setting up initial RAM disk DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -324,7 +324,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 echo "Reconfiguring GRUB DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -342,7 +342,7 @@ if [ "$configure_battery" = true ]; then
     echo "Configuring battery DONE"
 fi
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -371,7 +371,7 @@ systemctl enable firewalld > /dev/null
 echo "Setting up networking DONE"
 
 
-sleep 2
+sleep 4
 
 ###############################################
 # INSTALL BASIC UTILITIES                     #
@@ -380,7 +380,7 @@ echo "Installing basic utilities..."
 pacman -S curl wget zip unzip tmux tar less diff grep screen pacseek htop fastfetch imagemagick jq man-db man-pages plocate rsync --no-confirm --quiet
 echo "Installing basic utilities DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
@@ -398,7 +398,7 @@ fi
 
 echo "Setting up display and audio DONE"
 
-sleep 2
+sleep 4
 
 
 ###############################################
