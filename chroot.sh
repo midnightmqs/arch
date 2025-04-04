@@ -4,11 +4,12 @@ source config.sh
 # SETUP TIME                                  #
 ############################################### 
 echo "Setting system time..."
+
 ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
 hwclock --systohc
 timedatectl set-ntp true
-echo "Setting system time DONE"
 
+echo "Setting system time DONE"
 sleep 5
 
 
@@ -16,13 +17,14 @@ sleep 5
 # LANGUAGE CONFIGURATION                      #
 ############################################### 
 echo "Setting language and locales..."
-echo "$locale" >> /etc/locale.gen
+
+echo "$locale" > /etc/locale.gen
 locale-gen
 
 echo "LANG=$language" > /etc/locale.conf
 echo "KEYMAP=$keymap" > /etc/vconsole.conf
-echo "Setting language and locales DONE"
 
+echo "Setting language and locales DONE"
 sleep 5
 
 
@@ -30,13 +32,14 @@ sleep 5
 # CREATE HOSTNAME AND HOSTS FILE              #
 ############################################### 
 echo "Setting hostname and hosts file..."
+
 echo "$hostname" > /etc/hostname
 
 echo "127.0.0.1 localhost" >> /etc/hosts
 echo "::1 localhost" >> /etc/hosts
 echo "127.0.1.1 ${hostname}.localdomain $hostname" >> /etc/hosts
-echo "Setting hostname and hosts file DONE"
 
+echo "Setting hostname and hosts file DONE"
 sleep 5
 
 
@@ -44,9 +47,10 @@ sleep 5
 # CONFIGURE PACMAN                            #
 ############################################### 
 echo "Configuring pacman..."
-sed -i '/ParallelDownloads = 5/s/^#//g' /etc/pacman.conf
-echo "Configuring pacman DONE"
 
+sed -i '/ParallelDownloads = 5/s/^#//g' /etc/pacman.conf
+
+echo "Configuring pacman DONE"
 sleep 5
 
 
@@ -89,7 +93,6 @@ exit
 EOSU
 
 echo "Setting up the user DONE"
-
 sleep 5
 
 
@@ -108,7 +111,6 @@ echo -e "\tConfiguring GRUB..."
 grub-mkconfig -o /boot/grub/grub.cfg
 
 echo "Installing GRUB DONE"
-
 sleep 5
 
 
@@ -125,7 +127,6 @@ echo -e "\tRunning mkinitcpio..."
 mkinitcpio -p linux
 
 echo "Setting up initial RAM disk DONE"
-
 sleep 5
 
 
@@ -133,6 +134,7 @@ sleep 5
 # CONFIGURE GRUB                              #
 ###############################################
 echo "Reconfiguring GRUB..."
+
 if [ "$use_encryption" = true ]; then
     cryptdevice_uuid=$(blkid -s UUID -o value $(get_partition 2))
     sed -i "s|^GRUB_CMDLINE_LINUX=.*|GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$cryptdevice_uuid:$cryptroot root=/dev/mapper/$cryptroot\"|" /etc/default/grub
@@ -141,7 +143,6 @@ fi
 grub-mkconfig -o /boot/grub/grub.cfg
 
 echo "Reconfiguring GRUB DONE"
-
 sleep 5
 
 
@@ -150,6 +151,7 @@ sleep 5
 ############################################### 
 if [ "$configure_battery" = true ]; then
     echo "Configuring battery..."
+
     pacman -S tlp --no-confirm --quiet
 
     echo "START_CHARGE_THRESH_BAT1=85" >> /etc/tlp.conf
@@ -158,9 +160,8 @@ if [ "$configure_battery" = true ]; then
     systemctl enable tlp > /dev/null
 
     echo "Configuring battery DONE"
+    sleep 5
 fi
-
-sleep 5
 
 
 ###############################################
@@ -187,36 +188,32 @@ systemctl enable bluetooth > /dev/null
 systemctl enable firewalld > /dev/null
 
 echo "Setting up networking DONE"
-
-
 sleep 5
+
 
 ###############################################
 # INSTALL BASIC UTILITIES                     #
 ############################################### 
 echo "Installing basic utilities..."
-pacman -S curl wget zip unzip tmux tar less diff grep screen pacseek htop fastfetch imagemagick jq man-db man-pages plocate rsync --no-confirm --quiet
-echo "Installing basic utilities DONE"
 
+pacman -S curl wget zip unzip tmux tar less diff grep screen pacseek htop fastfetch imagemagick jq man-db man-pages plocate rsync --no-confirm --quiet
+
+echo "Installing basic utilities DONE"
 sleep 5
 
 
 ###############################################
 # SETUP DISPLAY                               #
 ############################################### 
-echo "Setting up display and audio..."
-
 if [ "$install_display" = true ]; then
-    # Setup X and drivers
+    echo "Setting up display and audio..."
+
     pacman -S xorg xorg-server $display_drivers --no-confirm --quiet
-
-    # Setup audio
     pacman -S alsa-utils pipewire wireplumber pipewire-alsa pipewire-pulse pipewire-jack pavucontrol --no-confirm --quiet
+
+    echo "Setting up display and audio DONE"
+    sleep 5
 fi
-
-echo "Setting up display and audio DONE"
-
-sleep 5
 
 
 ##########################################

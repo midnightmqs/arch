@@ -35,7 +35,6 @@ timedatectl set-timezone $timezone
 hwclock --systohc
 
 echo "Setting system time DONE"
-
 sleep 5
 
 
@@ -118,7 +117,6 @@ mkdir /mnt/boot
 mount $(get_partition 1) /mnt/boot
 
 echo "Setting up ${disk} DONE"
-
 sleep 5
 
 
@@ -126,13 +124,16 @@ sleep 5
 # START THE INSTALLATION                      #
 ############################################### 
 echo "Running pacstrap..."
+
 pacstrap /mnt base linux linux-firmware linux-headers vim "${ucode}-ucode" $([ "$use_btrfs" = true ] && echo btrfs-progs)
+
 echo "Running pacstrap DONE"
 
 echo "Generating fstab..."
-genfstab -U /mnt >> /mnt/etc/fstab
-echo "Generating fstab DONE"
 
+genfstab -U /mnt >> /mnt/etc/fstab
+
+echo "Generating fstab DONE"
 sleep 5
 
 
@@ -141,7 +142,6 @@ sleep 5
 ############################################### 
 clear
 echo "Entering arch-chroot..."
-
 sleep 5
 
 cp chroot.sh /mnt/root/chroot.sh 
