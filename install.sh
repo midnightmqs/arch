@@ -52,6 +52,8 @@ else
     echo "UEFI detected. Continuing..."
 fi
 
+sleep 2
+
 
 ###############################################
 # UTILITY FUNCTIONS                           #
@@ -76,13 +78,15 @@ hwclock --systohc
 
 echo "Setting system time DONE"
 
+sleep 2
+
 
 ###############################################
 # SETUP DISK                                  #
 ###############################################
 echo "Setting up ${disk}..."
 
-cat <<EOGDISK | gdisk $disk
+cat <<EOGDISK | gdisk $disk > /dev/null
 o
 Y
 n
@@ -100,14 +104,14 @@ Y
 EOGDISK
 
 echo -e "\tFormatting ESP..."
-mkfs.fat -F32 $(get_partition 1)
+mkfs.fat -F32 $(get_partition 1) > /dev/null
 
 if [ "$use_encryption" = true ]; then
     echo -e "\tEnabling encryption..."
-    echo -n "$encryption_password" | cryptsetup luksFormat --type luks2 $(get_partition 2)
+    echo -n "$encryption_password" | cryptsetup luksFormat --type luks2 $(get_partition 2) > /dev/null
 
     echo -e "\tOpening cryptroot... ($cryptroot)"
-    echo -n "$encryption_password" | cryptsetup luksOpen $(get_partition 2) $cryptroot
+    echo -n "$encryption_password" | cryptsetup luksOpen $(get_partition 2) $cryptroot > /dev/null
 
     root_partition="/dev/mapper/$cryptroot"
 else
@@ -119,7 +123,7 @@ if [ "$use_btrfs" = true ]; then
     echo -e "\tEnabling BTRFS..."
     echo -e "\tFormatting BTRFS partition..."
 
-    mkfs.btrfs "$root_partition"
+    mkfs.btrfs "$root_partition" > /dev/null
 
     echo -e "\tMounting BTRFS partiton..."
 
@@ -127,8 +131,8 @@ if [ "$use_btrfs" = true ]; then
     cd /mnt
     
     echo -e "\tCreating subvolumes..."
-    btrfs subvolume create @
-    btrfs subvolume create @home
+    btrfs subvolume create @ > /dev/null
+    btrfs subvolume create @home > /dev/null
     
     cd /
 
@@ -143,7 +147,7 @@ else
     echo -e "\tBTRFS disabled."
     echo -e "\tFormatting ext4 partition..."
 
-    mkfs.ext4 "$root_partition"
+    mkfs.ext4 "$root_partition" > /dev/null
 
     echo -e "\tMounting ext4 partition..."
 
@@ -157,6 +161,8 @@ mount $(get_partition 1) /mnt/boot
 
 echo "Setting up ${disk} DONE"
 
+sleep 2
+
 
 ###############################################
 # START THE INSTALLATION                      #
@@ -168,6 +174,8 @@ echo "Running pacstrap DONE"
 echo "Generating fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab
 echo "Generating fstab DONE"
+
+sleep 2
 
 
 ###############################################
@@ -183,6 +191,8 @@ hwclock --systohc
 timedatectl set-ntp true
 echo "Setting system time DONE"
 
+sleep 2
+
 
 ###############################################
 # LANGUAGE CONFIGURATION                      #
@@ -194,6 +204,8 @@ locale-gen
 echo "LANG=$language" > /etc/locale.conf
 echo "KEYMAP=$keymap" > /etc/vconsole.conf
 echo "Setting language and locales DONE"
+
+sleep 2
 
 
 ###############################################
@@ -207,6 +219,8 @@ echo "::1 localhost" >> /etc/hosts
 echo "127.0.1.1 ${hostname}.localdomain $hostname" >> /etc/hosts
 echo "Setting hostname and hosts file DONE"
 
+sleep 2
+
 
 ###############################################
 # CONFIGURE PACMAN                            #
@@ -214,6 +228,8 @@ echo "Setting hostname and hosts file DONE"
 echo "Configuring pacman..."
 sed -i '/ParallelDownloads = 5/s/^#//g' /etc/pacman.conf
 echo "Configuring pacman DONE"
+
+sleep 2
 
 
 ###############################################
@@ -256,6 +272,8 @@ EOSU
 
 echo "Setting up the user DONE"
 
+sleep 2
+
 
 ###############################################
 # INSTALL GRUB                                #
@@ -273,6 +291,8 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 echo "Installing GRUB DONE"
 
+sleep 2
+
 
 ###############################################
 # CONFIGURE INITCPIO                          #
@@ -288,6 +308,8 @@ mkinitcpio -p linux
 
 echo "Setting up initial RAM disk DONE"
 
+sleep 2
+
 
 ###############################################
 # CONFIGURE GRUB                              #
@@ -301,6 +323,8 @@ fi
 grub-mkconfig -o /boot/grub/grub.cfg
 
 echo "Reconfiguring GRUB DONE"
+
+sleep 2
 
 
 ###############################################
@@ -317,6 +341,8 @@ if [ "$configure_battery" = true ]; then
 
     echo "Configuring battery DONE"
 fi
+
+sleep 2
 
 
 ###############################################
@@ -345,12 +371,16 @@ systemctl enable firewalld > /dev/null
 echo "Setting up networking DONE"
 
 
+sleep 2
+
 ###############################################
 # INSTALL BASIC UTILITIES                     #
 ############################################### 
 echo "Installing basic utilities..."
 pacman -S curl wget zip unzip tmux tar less diff grep screen pacseek htop fastfetch imagemagick jq man-db man-pages plocate rsync --no-confirm --quiet
 echo "Installing basic utilities DONE"
+
+sleep 2
 
 
 ###############################################
@@ -367,6 +397,8 @@ if [ "$install_display" = true ]; then
 fi
 
 echo "Setting up display and audio DONE"
+
+sleep 2
 
 
 ###############################################
